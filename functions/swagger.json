@@ -1,0 +1,36 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "FireStock API",
+    "description": "The official FireStock API docs",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:5000/firestock-cloud/us-central1/api/v1",
+  "basePath": "/",
+  "tags": [ 
+    { 
+      "name": "Test", 
+      "description": "Route de test"
+    } 
+  ], 
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": { 
+    "/test/hello": { 
+      "get": { 
+        "tags": ["Test"], 
+        "summary": "Dire bonjour le monde !", 
+        "responses": { 
+          "200": { 
+            "description": "Message 'Hello World !'"
+          } 
+        } 
+      } 
+    } 
+  }
+}
