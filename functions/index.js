@@ -33,10 +33,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 });*/
 
 // All route by slice
-require("./routes/test.routes.js")(app);
-/* require("./routes/provider.routes.js")(app);
-require("./routes/sms.routes.js")(app);
-require("./routes/auth.routes.js")(app);*/
+require("./routes/auth.routes.js")(app);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

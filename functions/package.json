@@ -19,7 +19,7 @@
     "express": "^4.17.2",
     "express-rate-limit": "^6.2.1",
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.14.1",
+    "firebase-functions": "^3.18.1",
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
