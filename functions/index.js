@@ -38,5 +38,5 @@ require("./routes/auth.routes.js")(app);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Forwarding api logic to firebase functions
-// exports.api = functions.region("europe-west1").https.onRequest(app);
-exports.api = functions.https.onRequest(app);
+exports.api = functions.region("europe-west1").https.onRequest(app);
+// exports.api = functions.https.onRequest(app);

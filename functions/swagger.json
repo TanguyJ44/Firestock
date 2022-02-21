@@ -3,34 +3,113 @@
   "info": {
     "version": "1.0.0",
     "title": "FireStock API",
-    "description": "The official FireStock API docs",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
+    "description": "The official FireStock API docs"
   },
-  "host": "localhost:5000/firestock-cloud/us-central1/api/v1",
-  "basePath": "/",
+  "host": "europe-west1-firestock-cloud.cloudfunctions.net/api",
+  "basePath": "/v1",
   "tags": [ 
     { 
-      "name": "Test", 
-      "description": "Route de test"
+      "name": "Authentification", 
+      "description": "Création de compte, connexion, récupération ..."
     } 
-  ], 
-  "schemes": ["http"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  ],
+  "schemes": ["https"],
   "paths": { 
-    "/test/hello": { 
-      "get": { 
-        "tags": ["Test"], 
-        "summary": "Dire bonjour le monde !", 
+    "/auth/register": { 
+      "post": { 
+        "tags": ["Authentification"], 
+        "summary": "Créer un nouveau compte",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Register" },
+            "description": "Paramètres de création d'un nouvel utilisateur"
+          }
+        ],
         "responses": { 
           "200": { 
-            "description": "Message 'Hello World !'"
+            "description": "Utilisateur créé avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la création de l'utilisateur !"
           } 
         } 
       } 
-    } 
+    },
+    "/auth/login": { 
+      "post": { 
+        "tags": ["Authentification"], 
+        "summary": "Connecter un utilisateur",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Login" },
+            "description": "Paramètres de connexion d'un utilisateur"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Renvoi le token de session"
+          },
+          "400": { 
+            "description": "Erreur lors de la connexion de l'utilisateur !"
+          } 
+        } 
+      } 
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Register": {
+      "required": ["email", "password", "pseudo", "firstname", "lastname", "phone"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "pseudo": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        }
+      }
+    },
+    "Login": {
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
   }
 }

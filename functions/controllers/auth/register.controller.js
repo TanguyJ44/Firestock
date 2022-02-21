@@ -1,8 +1,10 @@
 /* eslint-disable linebreak-style */
 const firebase = require("../../utils/firebase.js");
+const mail = require("../../utils/mail.js");
 
 // ** REGISTER **
 exports.endpoint = (req, res) => {
+  console.log("EMAIL :: " + req.body.email);
   // check if all body parameters are correct
   if (!checkBodyParams(req.body)) {
     return res.status(400).json({
@@ -14,12 +16,12 @@ exports.endpoint = (req, res) => {
   }
 
   if (!req.body.picture) {
-    req.body.picture = "null";
+    req.body.picture = "https://assets.website-files.com/5e51c674258ffe10d286d30a/5e535cf47488c27eb04a70d1_peep-97.svg";
   }
 
   checkIfPseudoExist(req.body, (result) => {
     if (result[0] == true) {
-      res.status(400).json({
+      res.status(200).json({
         "status": "success",
         "detail": result[1],
       });
@@ -108,15 +110,29 @@ function resgisterAccountDetails(bodyParam, _callback) {
     picture: String(bodyParam.picture),
   }).then(() => {
     _callback([true, "New user account successfully created !"]);
-    /* const newUser = firebase.auth.getUser(bodyParam.userUid);
-    firebase.auth.sendEmailVerification(newUser)
-        .then(() => {
-          _callback([true, "New user account successfully created !"]);
+
+    const actionCodeSettings = {
+      url: "https://firestock.fr/",
+      handleCodeInApp: true,
+      /* iOS: {
+        bundleId: "com.example.firestock",
+      },
+      android: {
+        packageName: "com.example.firestock",
+        installApp: true,
+        minimumVersion: "6",
+      },
+      dynamicLinkDomain: "",*/
+    };
+
+    firebase.auth
+        .generateEmailVerificationLink(bodyParam.email, actionCodeSettings)
+        .then((link) => {
+          mail.sendEmailVerification(bodyParam.email, bodyParam.pseudo, link);
         })
         .catch((error) => {
-          console.log(error);
-          _callback([false, error, 6]);
-        });*/
+          console.log("Error : ", error);
+        });
   }).catch((error) => {
     _callback([false, error, 5]);
   });

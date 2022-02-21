@@ -2,6 +2,6 @@
 
 // ** LOGIN **
 exports.endpoint = (req, res) => {
-  res.sendStatus(200);
+  res.status(200).send("This endpoint is in development !");
 };
 

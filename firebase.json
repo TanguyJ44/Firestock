@@ -10,10 +10,15 @@
   },
   "hosting": {
     "public": "public",
+    "appAssociation": "AUTO",
     "rewrites": [
       {
         "source": "/v1/**",
         "function": "api"
+      },
+      { 
+        "source": "/apidoc/**",
+        "dynamicLinks": true
       }
     ],
     "ignore": [
