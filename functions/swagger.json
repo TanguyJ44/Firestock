@@ -64,6 +64,31 @@
           } 
         } 
       } 
+    },
+    "/auth/recovery": { 
+      "post": { 
+        "tags": ["Authentification"], 
+        "summary": "Réinitialiser le mot de passe",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Recovery" },
+            "description": "Paramètres de récupération d'un utilisateur"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Email de récupération envoyé avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la récupération du compte !"
+          } 
+        } 
+      } 
     }
   },
   "securityDefinitions": {
@@ -101,12 +126,20 @@
       }
     },
     "Login": {
-      "required": ["email", "password"],
+      "required": ["pseudo", "password"],
       "properties": {
-        "email": {
+        "pseudo": {
           "type": "string"
         },
         "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Recovery": {
+      "required": ["pseudo"],
+      "properties": {
+        "pseudo": {
           "type": "string"
         }
       }

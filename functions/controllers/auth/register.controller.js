@@ -4,7 +4,6 @@ const mail = require("../../utils/mail.js");
 
 // ** REGISTER **
 exports.endpoint = (req, res) => {
-  console.log("EMAIL :: " + req.body.email);
   // check if all body parameters are correct
   if (!checkBodyParams(req.body)) {
     return res.status(400).json({
@@ -19,7 +18,7 @@ exports.endpoint = (req, res) => {
     req.body.picture = "https://assets.website-files.com/5e51c674258ffe10d286d30a/5e535cf47488c27eb04a70d1_peep-97.svg";
   }
 
-  checkIfPseudoExist(req.body, (result) => {
+  startRegisterProcess(req.body, (result) => {
     if (result[0] == true) {
       res.status(200).json({
         "status": "success",
@@ -33,6 +32,10 @@ exports.endpoint = (req, res) => {
       });
     }
   });
+};
+
+const startRegisterProcess = (bodyParam, _callback) => {
+  checkIfPseudoExist(bodyParam, _callback);
 };
 
 /**
@@ -58,7 +61,7 @@ function checkBodyParams(bodyParam) {
 }
 
 /**
- * Check if the pseudo is not already in use
+ * Check if the pseudo is already in use
  * @param {Array} bodyParam Account creation params
  * @param {Function} _callback Post-execution recall method
  */
@@ -90,8 +93,8 @@ function resgisterNewAccount(bodyParam, _callback) {
       .then((userData) => {
         bodyParam.userUid = userData.uid;
         resgisterAccountDetails(bodyParam, _callback);
-      }).catch((error) => {
-        _callback([false, error, 4]);
+      }).catch(() => {
+        _callback([false, "This email is already in use !", 4]);
       });
 }
 

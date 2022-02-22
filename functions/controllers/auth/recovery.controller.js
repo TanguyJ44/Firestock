@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 const firebase = require("../../utils/firebase.js");
-const axios = require("axios");
+const mail = require("../../utils/mail.js");
 
 // ** LOGIN **
 exports.endpoint = (req, res) => {
@@ -14,12 +14,11 @@ exports.endpoint = (req, res) => {
     });
   }
 
-  startLoginProcess(req.body, (result) => {
+  startRecoveryProcess(req.body, (result) => {
     if (result[0] == true) {
       res.status(200).json({
         "status": "success",
-        "token": result[1],
-        "refreshToken": result[2],
+        "detail": result[1],
       });
     } else {
       res.status(400).json({
@@ -31,7 +30,7 @@ exports.endpoint = (req, res) => {
   });
 };
 
-const startLoginProcess = (bodyParam, _callback) => {
+const startRecoveryProcess = (bodyParam, _callback) => {
   checkIfPseudoExist(bodyParam, _callback);
 };
 
@@ -43,8 +42,6 @@ const startLoginProcess = (bodyParam, _callback) => {
 function checkBodyParams(bodyParam) {
   // Check for pseudo [required]
   if (!bodyParam.pseudo) return false;
-  // Check for password [required]
-  if (!bodyParam.password) return false;
 
   return true;
 }
@@ -61,10 +58,10 @@ function checkIfPseudoExist(bodyParam, _callback) {
         if (_snapshot._size == 1) {
           _snapshot.forEach((doc) => {
             bodyParam.userId = doc._ref._path.segments[1];
-            manageUser(bodyParam, _callback);
+            getUserEmail(bodyParam, _callback);
           });
         } else {
-          _callback([false, "Pseudo or password incorect !", 3]);
+          _callback([false, "Pseudo incorect !", 3]);
         }
       }).catch(() => {
         _callback([false, "Stockage service unavailable !", 2]);
@@ -72,21 +69,15 @@ function checkIfPseudoExist(bodyParam, _callback) {
 }
 
 /**
- * Retrieve account status before login
+ * Retrieve account user email
  * @param {Array} bodyParam Account creation params
  * @param {Function} _callback Post-execution recall method
  */
-function manageUser(bodyParam, _callback) {
+function getUserEmail(bodyParam, _callback) {
   firebase.auth.getUser(bodyParam.userId)
       .then((userRecord) => {
-        if (!userRecord.emailVerified) {
-          _callback([false, "Email address not verified !", 5]);
-        } else if (userRecord.disabled) {
-          _callback([false, "Account deactivated !", 6]);
-        } else {
-          bodyParam.email = userRecord.email;
-          loginUser(bodyParam, _callback);
-        }
+        bodyParam.email = userRecord.email;
+        sendPasswordResetEmail(bodyParam, _callback);
       })
       .catch(() => {
         _callback([false, "Authentication service unavailable !", 4]);
@@ -94,20 +85,21 @@ function manageUser(bodyParam, _callback) {
 }
 
 /**
- * Generate a new user connection
+ * Generate and send the recovery link by email
  * @param {Array} bodyParam Account creation params
  * @param {Function} _callback Post-execution recall method
  */
-function loginUser(bodyParam, _callback) {
-  axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZFHQkwcNKVHXv9Mz9b4OEVFvUFM5yQL8", {
-    "email": bodyParam.email,
-    "password": bodyParam.password,
-    "returnSecureToken": true,
-  })
-      .then((res) => {
-        _callback([true, res.data.idToken, res.data.refreshToken]);
+function sendPasswordResetEmail(bodyParam, _callback) {
+  const actionCodeSettings = {
+    url: "https://firestock.fr/",
+    handleCodeInApp: true,
+  };
+  firebase.auth.generatePasswordResetLink(bodyParam.email, actionCodeSettings)
+      .then((link) => {
+        _callback([true, "Recovery email sent !"]);
+        mail.sendEmailResetPassword(bodyParam.email, bodyParam.pseudo, link);
       })
       .catch(() => {
-        _callback([false, "Pseudo or password incorect !", 3]);
+        _callback([false, "Error", 5]);
       });
 }

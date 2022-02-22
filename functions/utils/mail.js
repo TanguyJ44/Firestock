@@ -30,11 +30,35 @@ function sendEmailVerification(email, pseudo, link) {
       "<br>Votre équipe Firestock",
   };
 
-  transporter.sendMail(mailOptions, function(error, info) {
+  transporter.sendMail(mailOptions, function(error) {
     if (error) {
       console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
+    }
+  });
+}
+
+/**
+ * Send account recovery link
+ * @param {String} email Account user email
+ * @param {String} pseudo Account user pseudo
+ * @param {String} link Recovery link
+ */
+function sendEmailResetPassword(email, pseudo, link) {
+  const mailOptions = {
+    from: "Firestock <contact@firestock.fr>",
+    to: email,
+    subject: "Récupération de votre compte - Firestock",
+    html: "Bonjour " + pseudo + ",<br><br>" +
+      "Cliquez sur ce lien pour changer votre mot de passe :<br><br>" + link +
+      "<br><br>Si vous n'avez pas demandé à récupérer votre mot de passe, " +
+      "vous pouvez ignorer cet e-mail." +
+      "<br><br>Merci," +
+      "<br>Votre équipe Firestock",
+  };
+
+  transporter.sendMail(mailOptions, function(error) {
+    if (error) {
+      console.log(error);
     }
   });
 }
@@ -43,4 +67,5 @@ function sendEmailVerification(email, pseudo, link) {
 module.exports = {
   transporter,
   sendEmailVerification,
+  sendEmailResetPassword,
 };
