@@ -89,12 +89,37 @@
           } 
         } 
       } 
+    },
+    "/auth/refresh": { 
+      "post": { 
+        "tags": ["Authentification"], 
+        "summary": "Rafraîchir le token de session",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Refresh" },
+            "description": "Paramètres de rafraîchissement d'un token"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Nouveau token généré avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors du rafraîchissement du token !"
+          } 
+        } 
+      } 
     }
   },
   "securityDefinitions": {
-    "api_key": {
+    "token": {
       "type": "apiKey",
-      "name": "api_key",
+      "name": "token",
       "in": "header"
     }
   },
@@ -140,6 +165,14 @@
       "required": ["pseudo"],
       "properties": {
         "pseudo": {
+          "type": "string"
+        }
+      }
+    },
+    "Refresh": {
+      "required": ["refreshToken"],
+      "properties": {
+        "refreshToken": {
           "type": "string"
         }
       }

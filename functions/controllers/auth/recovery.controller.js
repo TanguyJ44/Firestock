@@ -2,7 +2,7 @@
 const firebase = require("../../utils/firebase.js");
 const mail = require("../../utils/mail.js");
 
-// ** LOGIN **
+// ** RECOVERY **
 exports.endpoint = (req, res) => {
   // check if all body parameters are correct
   if (!checkBodyParams(req.body)) {
