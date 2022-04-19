@@ -7,9 +7,8 @@ exports.endpoint = (req, res) => {
   if (!checkBodyParams(req.body)) {
     return res.status(400).json({
       "status": "error",
-      "code": 1,
-      "detail": "One or more parameters of your " +
-        "query are incorrect or missing !",
+      "code": 2,
+      "detail": "INCORRECT_PARAMETERS",
     });
   }
 
@@ -26,8 +25,8 @@ exports.endpoint = (req, res) => {
       .catch(() => {
         res.status(400).json({
           "status": "error",
-          "code": 2,
-          "detail": "Refresh token invalid or expired !",
+          "code": 1,
+          "detail": "INVALID_OR_EXPIRED_R_TOKEN",
         });
       });
 };

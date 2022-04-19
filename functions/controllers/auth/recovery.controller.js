@@ -8,9 +8,8 @@ exports.endpoint = (req, res) => {
   if (!checkBodyParams(req.body)) {
     return res.status(400).json({
       "status": "error",
-      "code": 1,
-      "detail": "One or more parameters of your " +
-        "query are incorrect or missing !",
+      "code": 2,
+      "detail": "INCORRECT_PARAMETERS",
     });
   }
 
@@ -61,10 +60,10 @@ function checkIfPseudoExist(bodyParam, _callback) {
             getUserEmail(bodyParam, _callback);
           });
         } else {
-          _callback([false, "Pseudo incorect !", 3]);
+          _callback([false, "PSEUDO_INCORECT", 9]);
         }
       }).catch(() => {
-        _callback([false, "Stockage service unavailable !", 2]);
+        _callback([false, "DB_SERVICE_UNAVAILABLE", 4]);
       });
 }
 
@@ -80,7 +79,7 @@ function getUserEmail(bodyParam, _callback) {
         sendPasswordResetEmail(bodyParam, _callback);
       })
       .catch(() => {
-        _callback([false, "Authentication service unavailable !", 4]);
+        _callback([false, "AUTH_SERVICE_UNAVAILABLE", 3]);
       });
 }
 
@@ -100,6 +99,6 @@ function sendPasswordResetEmail(bodyParam, _callback) {
         mail.sendEmailResetPassword(bodyParam.email, bodyParam.pseudo, link);
       })
       .catch(() => {
-        _callback([false, "Error", 5]);
+        _callback([false, "INTERNAL_ERROR", -1]);
       });
 }

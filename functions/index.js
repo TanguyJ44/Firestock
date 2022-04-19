@@ -42,6 +42,8 @@ app.use((req, res, next) => {
       break;
   }
 
+  if (req.path.includes("/api-docs/")) req.bypass = true;
+
   next();
 });
 
@@ -64,13 +66,14 @@ app.use((req, res, next) => {
         res.status(400).json({
           "status": "error",
           "code": 0,
-          "detail": "Invalid or expired token !",
+          "detail": "INVALID_OR_EXPIRED_TOKEN",
         });
       });
 });
 
 // All route by slice
 require("./routes/auth.routes.js")(app);
+require("./routes/bucket.routes.js")(app);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

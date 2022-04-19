@@ -11,7 +11,11 @@
     { 
       "name": "Authentification", 
       "description": "Création de compte, connexion, récupération ..."
-    } 
+    },
+    {
+      "name": "Bucket", 
+      "description": "Lister, uploader, télécharger et supprimer des fichiers"
+    }
   ],
   "schemes": ["https"],
   "paths": { 
@@ -114,12 +118,93 @@
           } 
         } 
       } 
+    },
+    "/auth/logout": { 
+      "get": { 
+        "tags": ["Authentification"], 
+        "summary": "Déconnecter l'utilisateur",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Utilisateur déconnecté avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de l'invalidation des tokens !"
+          } 
+        } 
+      } 
+    },
+    "/bucket/data": { 
+      "get": { 
+        "tags": ["Bucket"], 
+        "summary": "Récupérer les données de l'utilisateur",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Chemin du dossier à récupérer"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Données récupérées avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la récupération des données !"
+          } 
+        } 
+      } 
+    },
+    "/bucket/download": { 
+      "get": { 
+        "tags": ["Bucket"], 
+        "summary": "Télécharger une donnée",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Chemin du fichier à télécharger"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Lien de téléchargement récupéré avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la récupération du lien !"
+          } 
+        } 
+      } 
     }
   },
   "securityDefinitions": {
-    "token": {
+    "Bearer": {
       "type": "apiKey",
-      "name": "token",
+      "name": "Authorization",
       "in": "header"
     }
   },

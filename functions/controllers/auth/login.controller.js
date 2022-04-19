@@ -8,9 +8,8 @@ exports.endpoint = (req, res) => {
   if (!checkBodyParams(req.body)) {
     return res.status(400).json({
       "status": "error",
-      "code": 1,
-      "detail": "One or more parameters of your " +
-        "query are incorrect or missing !",
+      "code": 2,
+      "detail": "INCORRECT_PARAMETERS",
     });
   }
 
@@ -64,10 +63,10 @@ function checkIfPseudoExist(bodyParam, _callback) {
             manageUser(bodyParam, _callback);
           });
         } else {
-          _callback([false, "Pseudo or password incorect !", 3]);
+          _callback([false, "PSEUDO_OR_PSWD_INCORECT", 8]);
         }
       }).catch(() => {
-        _callback([false, "Stockage service unavailable !", 2]);
+        _callback([false, "DB_SERVICE_UNAVAILABLE", 4]);
       });
 }
 
@@ -80,16 +79,16 @@ function manageUser(bodyParam, _callback) {
   firebase.auth.getUser(bodyParam.userId)
       .then((userRecord) => {
         if (!userRecord.emailVerified) {
-          _callback([false, "Email address not verified !", 5]);
+          _callback([false, "EMAIL_NOT_VERIFIED", 7]);
         } else if (userRecord.disabled) {
-          _callback([false, "Account deactivated !", 6]);
+          _callback([false, "ACCOUNT_DISABLED", 6]);
         } else {
           bodyParam.email = userRecord.email;
           loginUser(bodyParam, _callback);
         }
       })
       .catch(() => {
-        _callback([false, "Authentication service unavailable !", 4]);
+        _callback([false, "AUTH_SERVICE_UNAVAILABLE", 3]);
       });
 }
 
@@ -108,6 +107,6 @@ function loginUser(bodyParam, _callback) {
         _callback([true, res.data.idToken, res.data.refreshToken]);
       })
       .catch(() => {
-        _callback([false, "Pseudo or password incorect !", 3]);
+        _callback([false, "PSEUDO_OR_PSWD_INCORECT", 8]);
       });
 }

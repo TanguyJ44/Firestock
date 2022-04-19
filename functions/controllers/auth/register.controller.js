@@ -8,9 +8,8 @@ exports.endpoint = (req, res) => {
   if (!checkBodyParams(req.body)) {
     return res.status(400).json({
       "status": "error",
-      "code": 1,
-      "detail": "One or more parameters of your " +
-        "query are incorrect or missing !",
+      "code": 2,
+      "detail": "INCORRECT_PARAMETERS",
     });
   }
 
@@ -72,10 +71,10 @@ function checkIfPseudoExist(bodyParam, _callback) {
         if (_snapshot._size == 0) {
           resgisterNewAccount(bodyParam, _callback);
         } else {
-          _callback([false, "This pseudo is already in use !", 3]);
+          _callback([false, "PSEUDO_ALREADY_IN_USE", 11]);
         }
       }).catch(() => {
-        _callback([false, "Authentication service unavailable !", 2]);
+        _callback([false, "DB_SERVICE_UNAVAILABLE", 4]);
       });
 }
 
@@ -94,7 +93,7 @@ function resgisterNewAccount(bodyParam, _callback) {
         bodyParam.userUid = userData.uid;
         resgisterAccountDetails(bodyParam, _callback);
       }).catch(() => {
-        _callback([false, "This email is already in use !", 4]);
+        _callback([false, "EMAIL_ALREADY_IN_USE", 10]);
       });
 }
 
@@ -136,7 +135,7 @@ function resgisterAccountDetails(bodyParam, _callback) {
         .catch((error) => {
           console.log("Error : ", error);
         });
-  }).catch((error) => {
-    _callback([false, error, 5]);
+  }).catch(() => {
+    _callback([false, "INTERNAL_ERROR", -1]);
   });
 }
