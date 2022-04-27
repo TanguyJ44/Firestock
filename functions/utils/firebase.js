@@ -6,7 +6,6 @@ const serviceAccount = require("../serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://firestock-cloud-default-rtdb.firebaseio.com",
   storageBucket: "firestock-cloud",
 });
 

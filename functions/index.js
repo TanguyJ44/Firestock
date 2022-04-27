@@ -2,7 +2,6 @@ const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-// const rateLimit = require("express-rate-limit");
 const firebase = require("./utils/firebase.js");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
@@ -11,22 +10,17 @@ const swaggerDocument = require("./swagger.json");
 const app = express();
 
 // Allow Access-Control from remote access
-app.use(cors({origin: true}));
-
-// Limit of requests over 10 minutes
-/* const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 1000,
-});*/
+app.use(cors({
+  origin: true,
+}));
 
 // Analyze content type requests - application/json
 app.use(bodyParser.json());
 
 // Analyze content type requests - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}));
-
-// Apply the limit to all requests
-// app.use(limiter);
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
 
 // Check if the endpoint should be authenticated
 app.use((req, res, next) => {
@@ -75,6 +69,7 @@ app.use((req, res, next) => {
 require("./routes/auth.routes.js")(app);
 require("./routes/bucket.routes.js")(app);
 
+// Swagger API documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Forwarding api logic to firebase functions
