@@ -199,6 +199,155 @@
           } 
         } 
       } 
+    },
+    "/bucket/upload": { 
+      "post": { 
+        "tags": ["Bucket"], 
+        "summary": "Uploader une donnée",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": { "$ref": "#/definitions/Upload" }
+            }
+          }
+        },
+        "responses": { 
+          "200": { 
+            "description": "Fichier uploadé avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de l'upload du fichier !"
+          } 
+        } 
+      } 
+    },
+    "/bucket/rename": { 
+      "put": { 
+        "tags": ["Bucket"], 
+        "summary": "Renommer une donnée",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Rename" },
+            "description": "Paramètres de renommage de la donnée"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Donnée renommée avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors du renommage de la donnée !"
+          } 
+        } 
+      } 
+    },
+    "/bucket/move": { 
+      "put": { 
+        "tags": ["Bucket"], 
+        "summary": "Déplacer une donnée",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Move" },
+            "description": "Paramètres de déplacement de la donnée"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Donnée déplacée avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors du déplacement de la donnée !"
+          } 
+        } 
+      } 
+    },
+    "/bucket/copy": { 
+      "put": { 
+        "tags": ["Bucket"], 
+        "summary": "Copier une donnée",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Copy" },
+            "description": "Paramètres de copie de la donnée"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Donnée copiée avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la copie de la donnée !"
+          } 
+        } 
+      } 
+    },
+    "/bucket/delete": { 
+      "delete": { 
+        "tags": ["Bucket"], 
+        "summary": "Supprimer une donnée",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Delete" },
+            "description": "Paramètres de suppression de la donnée"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Donnée supprimée avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la suppression de la donnée !"
+          } 
+        } 
+      } 
     }
   },
   "securityDefinitions": {
@@ -258,6 +407,59 @@
       "required": ["refreshToken"],
       "properties": {
         "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "Upload": {
+      "required": ["file", "path"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "format": "binary"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "Rename": {
+      "required": ["filePath", "name"],
+      "properties": {
+        "filePath": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Move": {
+      "required": ["filePath", "destPath"],
+      "properties": {
+        "filePath": {
+          "type": "string"
+        },
+        "destPath": {
+          "type": "string"
+        }
+      }
+    },
+    "Copy": {
+      "required": ["filePath", "destPath"],
+      "properties": {
+        "filePath": {
+          "type": "string"
+        },
+        "destPath": {
+          "type": "string"
+        }
+      }
+    },
+    "Delete": {
+      "required": ["filePath"],
+      "properties": {
+        "filePath": {
           "type": "string"
         }
       }
