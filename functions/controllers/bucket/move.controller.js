@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 const firebase = require("../../utils/firebase.js");
 
 // ** MOVE **
@@ -12,8 +13,8 @@ exports.endpoint = (req, res) => {
     });
   }
 
-  const file = firebase.bucket.file(req.body.filePath);
-  file.move(req.body.destPath, function(err, destinationFile, apiResponse) {
+  const file = firebase.bucket.file(req.userId + req.body.filePath);
+  file.move(req.userId + req.body.destPath, function(err, destinationFile, apiResponse) {
     if (err) {
       return res.status(500).json({
         "status": "error",

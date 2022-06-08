@@ -12,7 +12,7 @@ exports.endpoint = (req, res) => {
     });
   }
 
-  const file = firebase.bucket.file(req.body.filePath);
+  const file = firebase.bucket.file(req.userId + req.body.filePath);
   file.delete(function(err, apiResponse) {
     if (err) {
       return res.status(500).json({

@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 const firebase = require("../../utils/firebase.js");
 
 // ** RENAME **
@@ -12,9 +13,9 @@ exports.endpoint = (req, res) => {
     });
   }
 
-  const file = firebase.bucket.file(req.body.filePath);
+  const file = firebase.bucket.file(req.userId + req.body.filePath);
 
-  file.rename(req.body.name, function(err, renamedFile, apiResponse) {
+  file.rename(req.userId + req.body.name, function(err, renamedFile, apiResponse) {
     if (err) {
       return res.status(500).json({
         "status": "error",
