@@ -12,5 +12,8 @@ exports.endpoint = (req, res) => {
   }
 
   const file = firebase.bucket.file(req.userId + req.query.path);
-  res.status(200).send(file.publicUrl());
+  res.status(200).json({
+    "status": "success",
+    "url": file.publicUrl(),
+  });
 };
