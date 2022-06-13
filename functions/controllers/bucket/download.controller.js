@@ -12,8 +12,19 @@ exports.endpoint = (req, res) => {
   }
 
   const file = firebase.bucket.file(req.userId + req.query.path);
-  res.status(200).json({
-    "status": "success",
-    "url": file.publicUrl(),
+
+  file.makePublic(function(err, apiResponse) {
+    if (err) {
+      res.status(500).json({
+        "status": "error",
+        "code": 17,
+        "detail": "DOWNLOAD_LINK_BROKEN",
+      });
+    } else {
+      res.status(200).json({
+        "status": "success",
+        "url": file.publicUrl(),
+      });
+    }
   });
 };
