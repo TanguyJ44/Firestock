@@ -3,6 +3,7 @@
 module.exports = (app) => {
   const DATA = require("../controllers/bucket/data.controller.js");
   const DOWNLOAD = require("../controllers/bucket/download.controller.js");
+  const STORAGE = require("../controllers/bucket/storage.controller.js");
   const UPLOAD = require("../controllers/bucket/upload.controller.js");
   const RENAME = require("../controllers/bucket/rename.controller.js");
   const MOVE = require("../controllers/bucket/move.controller.js");
@@ -11,6 +12,7 @@ module.exports = (app) => {
 
   app.get("/v1/bucket/data", DATA.endpoint);
   app.get("/v1/bucket/download", DOWNLOAD.endpoint);
+  app.get("/v1/bucket/storage", STORAGE.endpoint);
   app.post("/v1/bucket/upload", UPLOAD.endpoint);
   app.put("/v1/bucket/rename", RENAME.endpoint);
   app.put("/v1/bucket/move", MOVE.endpoint);
