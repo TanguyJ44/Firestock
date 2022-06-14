@@ -67,6 +67,7 @@ app.use((req, res, next) => {
 
 // All route by slice
 require("./routes/auth.routes.js")(app);
+require("./routes/user.routes.js")(app);
 require("./routes/bucket.routes.js")(app);
 
 // Swagger API documentation
