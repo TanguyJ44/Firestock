@@ -12,6 +12,10 @@
       "name": "Authentification", 
       "description": "Création de compte, connexion, récupération ..."
     },
+    { 
+      "name": "Utilisateur", 
+      "description": "Gestion des utilisateurs"
+    },
     {
       "name": "Bucket", 
       "description": "Lister, uploader, télécharger et supprimer des fichiers"
@@ -140,6 +144,27 @@
         } 
       } 
     },
+    "/user/infos": { 
+      "get": { 
+        "tags": ["Utilisateur"], 
+        "summary": "Récupérer les informations de l'utilisateur",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Informations de l'utilisateur récupérées avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la récupération des informations de l'utilisateur !"
+          } 
+        }
+      } 
+    },
     "/bucket/data": { 
       "get": { 
         "tags": ["Bucket"], 
@@ -198,6 +223,27 @@
             "description": "Erreur lors de la récupération du lien !"
           } 
         } 
+      } 
+    },
+    "/bucket/storage": { 
+      "get": { 
+        "tags": ["Bucket"], 
+        "summary": "Récupérer le quota de stockage de l'utilisateur",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "description": "Quota de stockage récupéré avec succès !"
+          },
+          "400": { 
+            "description": "Erreur lors de la récupération du quota !"
+          } 
+        }
       } 
     },
     "/bucket/upload": { 

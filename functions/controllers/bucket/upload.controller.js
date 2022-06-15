@@ -18,7 +18,7 @@ exports.endpoint = (req, res) => {
 
       const file = files.file;
       if (!file) {
-        reject(new Error("no file to upload, please choose a file."));
+        reject(new Error("No file to upload, please choose a file !"));
         return;
       }
 
@@ -33,18 +33,17 @@ exports.endpoint = (req, res) => {
     });
   })
       .then((response) => {
-        res.status(400).json({
+        res.status(200).json({
           "status": "success",
           "detail": "File uploaded successfully !",
         });
         return null;
       })
       .catch((err) => {
-        console.error("Error while parsing form: " + err);
         res.status(400).json({
           "status": "error",
-          "code": 999,
-          "detail": "?",
+          "code": 19,
+          "detail": "UPLOAD_FILE_ERROR",
         });
       });
 };

@@ -23,15 +23,15 @@ exports.endpoint = (req, res) => {
               .catch(() => {
                 res.status(500).json({
                   "status": "error",
-                  "code": -99,
-                  "detail": "?",
+                  "code": 3,
+                  "detail": "AUTH_SERVICE_UNAVAILABLE",
                 });
               });
         } else {
           res.status(404).json({
             "status": "error",
-            "code": -99,
-            "detail": "?",
+            "code": 18,
+            "detail": "INVALID_USER",
           });
         }
       }
@@ -39,8 +39,8 @@ exports.endpoint = (req, res) => {
       .catch((err) => {
         res.status(500).json({
           "status": "error",
-          "code": -99,
-          "detail": "?",
+          "code": 4,
+          "detail": "DB_SERVICE_UNAVAILABLE",
         });
       });
 };

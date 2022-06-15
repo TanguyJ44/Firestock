@@ -30,7 +30,8 @@ exports.endpoint = (req, res) => {
       .catch(function(err) {
         return res.status(500).json({
           "status": "error",
-          "message": err,
+          "code": 5,
+          "detail": "STORAGE_SERVICE_UNAVAILABLE",
         });
       });
 };

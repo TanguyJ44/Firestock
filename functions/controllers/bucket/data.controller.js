@@ -22,7 +22,6 @@ exports.endpoint = (req, res) => {
   }, function(err, files) {
     if (!err) {
       files.forEach((file) => {
-        console.log(file);
         formatFiles.push({
           name: (file.name.slice(-1) != "/") ? file.name.replace(folderPrefix, "") : file.name.replace(folderPrefix, "").slice(0, -1),
           type: (file.name.slice(-1) != "/") ? file.metadata.contentType : "folder",
@@ -32,11 +31,13 @@ exports.endpoint = (req, res) => {
         });
       });
       formatFiles.shift();
-      console.log(formatFiles);
-      res.json(formatFiles);
+      res.status(200).json(formatFiles);
     } else {
-      console.log(err);
-      res.json(err);
+      res.status(500).json({
+        "status": "error",
+        "code": 5,
+        "detail": "STORAGE_SERVICE_UNAVAILABLE",
+      });
     }
   });
 };

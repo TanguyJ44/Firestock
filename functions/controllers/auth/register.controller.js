@@ -116,15 +116,6 @@ function resgisterAccountDetails(bodyParam, _callback) {
     const actionCodeSettings = {
       url: "https://firestock.fr/",
       handleCodeInApp: true,
-      /* iOS: {
-        bundleId: "com.example.firestock",
-      },
-      android: {
-        packageName: "com.example.firestock",
-        installApp: true,
-        minimumVersion: "6",
-      },
-      dynamicLinkDomain: "",*/
     };
 
     firebase.auth
