@@ -511,9 +511,12 @@
       }
     },
     "Rename": {
-      "required": ["filePath", "name"],
+      "required": ["path", "file", "name"],
       "properties": {
-        "filePath": {
+        "path": {
+          "type": "string"
+        },
+        "file": {
           "type": "string"
         },
         "name": {

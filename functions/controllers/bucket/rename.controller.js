@@ -13,9 +13,9 @@ exports.endpoint = (req, res) => {
     });
   }
 
-  const file = firebase.bucket.file(req.userId + req.body.filePath);
+  const file = firebase.bucket.file(req.userId + req.body.path + req.body.file);
 
-  file.rename(req.userId + req.body.name, function(err, renamedFile, apiResponse) {
+  file.rename(req.userId + req.body.path + req.body.name, function(err, renamedFile, apiResponse) {
     if (err) {
       return res.status(500).json({
         "status": "error",
@@ -37,8 +37,10 @@ exports.endpoint = (req, res) => {
  * @return {boolean} Returns true if all parameters are correct
  */
 function checkBodyParams(bodyParam) {
-  // Check for filePath [required]
-  if (!bodyParam.filePath) return false;
+  // Check for path [required]
+  if (!bodyParam.path) return false;
+  // Check for file [required]
+  if (!bodyParam.file) return false;
   // Check for name [required]
   if (!bodyParam.name) return false;
 
