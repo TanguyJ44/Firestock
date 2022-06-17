@@ -13,13 +13,16 @@ exports.endpoint = (req, res) => {
     });
   }
 
+  // Start the recovery process
   startRecoveryProcess(req.body, (result) => {
     if (result[0] == true) {
+      // Return confirmation recovery email sent
       res.status(200).json({
         "status": "success",
         "detail": result[1],
       });
     } else {
+      // Return error code
       res.status(400).json({
         "status": "error",
         "code": result[2],
@@ -51,12 +54,14 @@ function checkBodyParams(bodyParam) {
  * @param {Function} _callback Post-execution recall method
  */
 function checkIfPseudoExist(bodyParam, _callback) {
+  // Get the user infos
   firebase.db.collection("users")
       .where("pseudo", "==", bodyParam.pseudo).get()
       .then((_snapshot) => {
         if (_snapshot._size == 1) {
           _snapshot.forEach((doc) => {
             bodyParam.userId = doc._ref._path.segments[1];
+            // Get user email
             getUserEmail(bodyParam, _callback);
           });
         } else {
@@ -73,9 +78,11 @@ function checkIfPseudoExist(bodyParam, _callback) {
  * @param {Function} _callback Post-execution recall method
  */
 function getUserEmail(bodyParam, _callback) {
+  // Get the user infos
   firebase.auth.getUser(bodyParam.userId)
       .then((userRecord) => {
         bodyParam.email = userRecord.email;
+        // Send recovery email
         sendPasswordResetEmail(bodyParam, _callback);
       })
       .catch(() => {
@@ -93,9 +100,11 @@ function sendPasswordResetEmail(bodyParam, _callback) {
     url: "https://firestock.fr/",
     handleCodeInApp: true,
   };
+  // Generate a password reset link
   firebase.auth.generatePasswordResetLink(bodyParam.email, actionCodeSettings)
       .then((link) => {
         _callback([true, "Recovery email sent !"]);
+        // Send recovery email
         mail.sendEmailResetPassword(bodyParam.email, bodyParam.pseudo, link);
       })
       .catch(() => {

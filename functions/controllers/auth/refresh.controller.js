@@ -12,17 +12,20 @@ exports.endpoint = (req, res) => {
     });
   }
 
+  // Start the refresh token process
   axios.post("https://securetoken.googleapis.com/v1/token?key=AIzaSyBZFHQkwcNKVHXv9Mz9b4OEVFvUFM5yQL8", {
     "grant_type": "refresh_token",
     "refresh_token": req.body.refreshToken,
   })
       .then((result) => {
+        // Return the new token
         res.status(200).json({
           "status": "success",
           "token": result.data.id_token,
         });
       })
       .catch(() => {
+        // Return the error code
         res.status(400).json({
           "status": "error",
           "code": 1,

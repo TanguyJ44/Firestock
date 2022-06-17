@@ -14,14 +14,17 @@ exports.endpoint = (req, res) => {
   }
 
   const file = firebase.bucket.file(req.userId + req.body.filePath);
+  // Move the file
   file.move(req.userId + req.body.destPath, function(err, destinationFile, apiResponse) {
     if (err) {
+      // Return the error code
       return res.status(500).json({
         "status": "error",
         "code": 15,
         "detail": "UNABLE_MOVE_FILE",
       });
     } else {
+      // Return the success code
       return res.status(200).json({
         "status": "success",
         "detail": "The file has been moved !",

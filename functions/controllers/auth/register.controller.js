@@ -13,17 +13,21 @@ exports.endpoint = (req, res) => {
     });
   }
 
+  // Define default picture
   if (!req.body.picture) {
     req.body.picture = "https://assets.website-files.com/5e51c674258ffe10d286d30a/5e535cf47488c27eb04a70d1_peep-97.svg";
   }
 
+  // Start register process
   startRegisterProcess(req.body, (result) => {
     if (result[0] == true) {
+      // Return success response
       res.status(200).json({
         "status": "success",
         "detail": result[1],
       });
     } else {
+      // Return error response
       res.status(400).json({
         "status": "error",
         "code": result[2],
@@ -65,10 +69,12 @@ function checkBodyParams(bodyParam) {
  * @param {Function} _callback Post-execution recall method
  */
 function checkIfPseudoExist(bodyParam, _callback) {
+  // Check if the pseudo is already in use
   firebase.db.collection("users")
       .where("pseudo", "==", bodyParam.pseudo).get()
       .then((_snapshot) => {
         if (_snapshot._size == 0) {
+          // Pseudo is not in use
           resgisterNewAccount(bodyParam, _callback);
         } else {
           _callback([false, "PSEUDO_ALREADY_IN_USE", 11]);
@@ -84,6 +90,7 @@ function checkIfPseudoExist(bodyParam, _callback) {
  * @param {Function} _callback Post-execution recall method
  */
 function resgisterNewAccount(bodyParam, _callback) {
+  // Create a new user account
   firebase.auth.createUser({
     email: bodyParam.email,
     password: bodyParam.password,
@@ -91,6 +98,7 @@ function resgisterNewAccount(bodyParam, _callback) {
   })
       .then((userData) => {
         bodyParam.userUid = userData.uid;
+        // Register account details
         resgisterAccountDetails(bodyParam, _callback);
       }).catch(() => {
         _callback([false, "EMAIL_ALREADY_IN_USE", 10]);
@@ -103,6 +111,7 @@ function resgisterNewAccount(bodyParam, _callback) {
  * @param {Function} _callback Post-execution recall method
  */
 function resgisterAccountDetails(bodyParam, _callback) {
+  // Register account details in DB
   firebase.db.collection("users").doc(bodyParam.userUid).set({
     rank: "user",
     pseudo: String(bodyParam.pseudo),
@@ -118,9 +127,11 @@ function resgisterAccountDetails(bodyParam, _callback) {
       handleCodeInApp: true,
     };
 
+    // Send email with verification link
     firebase.auth
         .generateEmailVerificationLink(bodyParam.email, actionCodeSettings)
         .then((link) => {
+          // Send email with verification link
           mail.sendEmailVerification(bodyParam.email, bodyParam.pseudo, link);
         })
         .catch((error) => {

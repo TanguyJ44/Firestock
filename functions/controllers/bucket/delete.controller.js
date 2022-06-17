@@ -13,14 +13,17 @@ exports.endpoint = (req, res) => {
   }
 
   const file = firebase.bucket.file(req.userId + req.body.filePath);
+  // Delete the file
   file.delete(function(err, apiResponse) {
     if (err) {
+      // Return the error code
       return res.status(500).json({
         "status": "error",
         "code": 14,
         "detail": "UNABLE_DELETE_FILE",
       });
     } else {
+      // Return the success code
       return res.status(200).json({
         "status": "success",
         "detail": "The file has been deleted !",

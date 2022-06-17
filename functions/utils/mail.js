@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 const nodemailer = require("nodemailer");
 
+// Create a SMTP transporter object
 const transporter = nodemailer.createTransport({
   host: "ssl0.ovh.net",
   port: 465,

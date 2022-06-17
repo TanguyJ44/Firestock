@@ -13,14 +13,17 @@ exports.endpoint = (req, res) => {
     });
   }
 
+  // Start the login process
   startLoginProcess(req.body, (result) => {
     if (result[0] == true) {
+      // Return the token and refresh token
       res.status(200).json({
         "status": "success",
         "token": result[1],
         "refreshToken": result[2],
       });
     } else {
+      // Return the error code
       res.status(400).json({
         "status": "error",
         "code": result[2],
@@ -54,11 +57,13 @@ function checkBodyParams(bodyParam) {
  * @param {Function} _callback Post-execution recall method
  */
 function checkIfPseudoExist(bodyParam, _callback) {
+  // Get the user infos
   firebase.db.collection("users")
       .where("pseudo", "==", bodyParam.pseudo).get()
       .then((_snapshot) => {
         if (_snapshot._size == 1) {
           _snapshot.forEach((doc) => {
+            // Retrieve the user id
             bodyParam.userId = doc._ref._path.segments[1];
             manageUser(bodyParam, _callback);
           });
@@ -76,10 +81,13 @@ function checkIfPseudoExist(bodyParam, _callback) {
  * @param {Function} _callback Post-execution recall method
  */
 function manageUser(bodyParam, _callback) {
+  // Get the user infos
   firebase.auth.getUser(bodyParam.userId)
       .then((userRecord) => {
+        // Check if the user email is verified
         if (!userRecord.emailVerified) {
           _callback([false, "EMAIL_NOT_VERIFIED", 7]);
+          // Check if the user is banned
         } else if (userRecord.disabled) {
           _callback([false, "ACCOUNT_DISABLED", 6]);
         } else {
@@ -98,6 +106,7 @@ function manageUser(bodyParam, _callback) {
  * @param {Function} _callback Post-execution recall method
  */
 function loginUser(bodyParam, _callback) {
+  // Generate a new user connection
   axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZFHQkwcNKVHXv9Mz9b4OEVFvUFM5yQL8", {
     "email": bodyParam.email,
     "password": bodyParam.password,

@@ -3,11 +3,14 @@ const firebase = require("../../utils/firebase.js");
 
 // ** INFOS **
 exports.endpoint = (req, res) => {
+  // Get the user infos
   firebase.db.collection("users").doc(req.userId).get()
       .then((doc) => {
         if (doc.exists) {
+          // Get user email
           firebase.auth.getUser(req.userId)
               .then((userRecord) => {
+                // Send user infos
                 res.status(200).json({
                   "status": "success",
                   "user": {
@@ -21,6 +24,7 @@ exports.endpoint = (req, res) => {
                 });
               })
               .catch(() => {
+                // Error while getting user email
                 res.status(500).json({
                   "status": "error",
                   "code": 3,
@@ -28,6 +32,7 @@ exports.endpoint = (req, res) => {
                 });
               });
         } else {
+          // User not found
           res.status(404).json({
             "status": "error",
             "code": 18,
@@ -37,6 +42,7 @@ exports.endpoint = (req, res) => {
       }
       )
       .catch((err) => {
+        // Error while getting user infos
         res.status(500).json({
           "status": "error",
           "code": 4,

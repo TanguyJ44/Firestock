@@ -15,12 +15,14 @@ exports.endpoint = (req, res) => {
   const formatFiles = [];
 
   const folderPrefix = req.userId + req.query.path;
+  // Get the list of files in the folder
   firebase.bucket.getFiles({
     prefix: folderPrefix,
     delimiter: "/",
     includeTrailingDelimiter: true,
   }, function(err, files) {
     if (!err) {
+      // For each file, get the metadata
       files.forEach((file) => {
         formatFiles.push({
           name: (file.name.slice(-1) != "/") ? file.name.replace(folderPrefix, "") : file.name.replace(folderPrefix, "").slice(0, -1),
@@ -31,8 +33,10 @@ exports.endpoint = (req, res) => {
         });
       });
       formatFiles.shift();
+      // Return list of files
       res.status(200).json(formatFiles);
     } else {
+      // Return the error code
       res.status(500).json({
         "status": "error",
         "code": 5,
